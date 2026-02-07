@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
-    <StartupObject>FileToVox.Program</StartupObject>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
     <Authors>Zarbuz</Authors>
@@ -11,7 +10,6 @@
     <PackageProjectUrl>https://github.com/Zarbuz/FileToVox</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Zarbuz/FileToVox</RepositoryUrl>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

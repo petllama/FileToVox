@@ -1,4 +1,5 @@
-﻿using FileToVoxCore.Schematics;
+﻿using FileToVox.Services;
+using FileToVoxCore.Schematics;
 using FileToVoxCore.Utils;
 using ImageMagick;
 using System;
@@ -13,7 +14,7 @@ namespace FileToVox.Extensions
 
 		public static void Quantize(MagickImage image, QuantizeSettings settings)
 		{
-			if (Program.DisableQuantization())
+			if (ConversionContext.DisableQuantization)
 			{
 				Console.WriteLine("[WARNING] By disabling quantization, only the first 255 unique colors will be taken into account");
 			}
@@ -28,7 +29,7 @@ namespace FileToVox.Extensions
 				return voxels;
 			}
 
-			if (Program.DisableQuantization())
+			if (ConversionContext.DisableQuantization)
 			{
 				Console.WriteLine("[WARNING] By disabling quantization, only the first 255 unique colors will be taken into account");
 				return voxels;

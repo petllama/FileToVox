@@ -1,0 +1,122 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FileToVox.Gui.ViewModels"
+        x:Class="FileToVox.Gui.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="FileToVox"
+        Width="720" Height="680"
+        MinWidth="600" MinHeight="500"
+        DragDrop.AllowDrop="True">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="16">
+
+        <!-- File Selection -->
+        <StackPanel Grid.Row="0" Spacing="8">
+            <TextBlock Text="File Selection" FontWeight="Bold" FontSize="16" Margin="0,0,0,4"/>
+
+            <Grid ColumnDefinitions="80,*,Auto" RowDefinitions="Auto,Auto">
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Input:" VerticalAlignment="Center" Margin="0,0,8,6"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding InputPath}" Watermark="Path to input file..." Margin="0,0,8,6"/>
+                <Button Grid.Row="0" Grid.Column="2" Content="Browse..." Command="{Binding BrowseInputCommand}" MinWidth="80" Margin="0,0,0,6"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Output:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding OutputPath}" Watermark="Path to output .vox file..." Margin="0,0,8,0"/>
+                <Button Grid.Row="1" Grid.Column="2" Content="Browse..." Command="{Binding BrowseOutputCommand}" MinWidth="80"/>
+            </Grid>
+
+            <TextBlock Text="{Binding DetectedFormat, StringFormat='Detected format: {0}'}"
+                       IsVisible="{Binding DetectedFormat, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                       Foreground="LightBlue" Margin="80,0,0,0"/>
+        </StackPanel>
+
+        <!-- Options Panel -->
+        <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Padding="12" Margin="0,12,0,0">
+            <StackPanel Spacing="10">
+                <TextBlock Text="Options" FontWeight="Bold" FontSize="16" Margin="0,0,0,4"/>
+
+                <WrapPanel Orientation="Horizontal">
+                    <CheckBox Content="Color" IsChecked="{Binding Color}" Margin="0,0,16,0"/>
+                    <CheckBox Content="Excavate" IsChecked="{Binding Excavate}" Margin="0,0,16,0"/>
+                    <CheckBox Content="Debug" IsChecked="{Binding Debug}" Margin="0,0,16,0"/>
+                    <CheckBox Content="Disable Quantization" IsChecked="{Binding DisableQuantization}"/>
+                </WrapPanel>
+
+                <!-- File pickers -->
+                <Grid ColumnDefinitions="100,*,Auto" RowDefinitions="Auto,Auto">
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Color File:" VerticalAlignment="Center" Margin="0,0,8,6"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding InputColorFile}" Watermark="Optional color file..." Margin="0,0,8,6"/>
+                    <Button Grid.Row="0" Grid.Column="2" Content="Browse..." Command="{Binding BrowseColorFileCommand}" MinWidth="80" Margin="0,0,0,6"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Palette:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding InputPaletteFile}" Watermark="Optional palette file..." Margin="0,0,8,0"/>
+                    <Button Grid.Row="1" Grid.Column="2" Content="Browse..." Command="{Binding BrowsePaletteCommand}" MinWidth="80"/>
+                </Grid>
+
+                <!-- Mesh resolution (shown when input is a 3D model) -->
+                <StackPanel IsVisible="{Binding IsMeshInput}" Spacing="4">
+                    <TextBlock Text="Mesh Options (mesh2vox)" FontWeight="SemiBold"/>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="Voxel Resolution:" VerticalAlignment="Center"/>
+                        <NumericUpDown Value="{Binding MeshResolution}" Minimum="1" Maximum="256" Increment="10" FormatString="F0" Width="120"/>
+                        <TextBlock Text="(40=low, 80=default, 126=high, 256=max)" VerticalAlignment="Center" Foreground="Gray" FontSize="12"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- FileToVox numeric inputs (hidden when input is a mesh) -->
+                <Grid ColumnDefinitions="*,*,*,*" IsVisible="{Binding !IsMeshInput}">
+                    <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,6,0">
+                        <TextBlock Text="Color Limit (0-256)"/>
+                        <NumericUpDown Value="{Binding ColorLimit}" Minimum="0" Maximum="256" Increment="1" FormatString="F0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Spacing="4" Margin="6,0,6,0">
+                        <TextBlock Text="Chunk Size (10-256)"/>
+                        <NumericUpDown Value="{Binding ChunkSize}" Minimum="10" Maximum="256" Increment="1" FormatString="F0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Spacing="4" Margin="6,0,6,0">
+                        <TextBlock Text="Heightmap Factor"/>
+                        <NumericUpDown Value="{Binding HeightMap}" Minimum="1" Maximum="1000" Increment="1" FormatString="F0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="3" Spacing="4" Margin="6,0,0,0">
+                        <TextBlock Text="Grid Size"/>
+                        <NumericUpDown Value="{Binding GridSize}" Minimum="10" Maximum="2000" Increment="1" FormatString="F0"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- Action Bar -->
+        <StackPanel Grid.Row="2" Spacing="8" Margin="0,12,0,0">
+            <Grid ColumnDefinitions="Auto,Auto,*,Auto">
+                <Button Grid.Column="0" Content="Convert" Command="{Binding ConvertCommand}"
+                        MinWidth="100" HorizontalContentAlignment="Center"
+                        Classes="accent"/>
+                <Button Grid.Column="1" Content="Cancel" Command="{Binding CancelCommand}"
+                        IsEnabled="{Binding IsConverting}" MinWidth="80" Margin="8,0,0,0"
+                        HorizontalContentAlignment="Center"/>
+                <TextBlock Grid.Column="2" Text="{Binding StatusText}" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                <Button Grid.Column="3" Content="Clear Log" Command="{Binding ClearLogCommand}" MinWidth="80"/>
+            </Grid>
+            <ProgressBar Value="{Binding Progress}" Minimum="0" Maximum="100" Height="4"
+                         IsIndeterminate="{Binding IsConverting}"/>
+        </StackPanel>
+
+        <!-- Log Output -->
+        <Border Grid.Row="3" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Margin="0,8,0,0" Padding="4">
+            <ListBox x:Name="LogListBox" ItemsSource="{Binding LogMessages}"
+                     Background="Transparent" BorderThickness="0"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontFamily="Cascadia Mono,Consolas,Courier New,monospace" FontSize="12"
+                                   TextWrapping="Wrap"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
+
+    </Grid>
+</Window>
