@@ -1,30 +1,22 @@
-# What is FileToVox?
+# FileToVox (Fork)
 
-FileToVox converts files into `.vox` files (MagicaVoxel). It is available as both a **command-line tool** and a **GUI application**.
+> Forked from [Zarbuz/FileToVox](https://github.com/Zarbuz/FileToVox). See the original project for full documentation, wiki, and tutorials.
+
+This fork adds an **Avalonia desktop GUI** and restructures the solution to target **.NET 8.0**.
+
+## What Changed
+
+- **Avalonia GUI** (`FileToVox.Gui`) — graphical interface for file conversion with file pickers, option controls, and a live log view
+- **Restructured solution** — conversion logic extracted into a shared library (`SchematicToVoxCore`) used by both the CLI and GUI
+- **Upgraded to .NET 8.0** across all projects
 
 ## Supported Formats
 
-- .asc (Esri ASCII raster format)
-- .binvox
-- .fbx
-- .csv
-- .json (House-made format)
-- .obj
-- .ply (Binary and ASCII)
-- .png
-- .schematic
-- .tif
-- .qb (Qubicle)
-- .xyz (X Y Z R G B)
-- folder (of .PNG)
+.asc, .binvox, .csv, .fbx, .json, .obj, .ply, .png, .qb, .schematic, .tif, .xyz, and folders of .PNG images.
 
-FileToVox can import a folder of images (.PNG) where each image is a layer. (Useful for importing fractals from Mandelbulb3D)
-
-It supports world regions, so you can convert a terrain bigger than 126^3 voxels!
+See the [original wiki](https://github.com/Zarbuz/FileToVox/wiki/1.-Introduction) for detailed format documentation.
 
 ## Project Structure
-
-The solution contains three projects:
 
 | Project | Description |
 |---|---|
@@ -63,7 +55,7 @@ dotnet publish FileToVox.Cli/FileToVox.Cli.csproj -c Release -r osx-x64
 dotnet run --project FileToVox.Cli -- --i INPUT --o OUTPUT
 ```
 
-#### CLI Options
+#### Options
 
 | Option | Description |
 |---|---|
@@ -93,35 +85,8 @@ dotnet run --project FileToVox.Cli -- --i mymodel.obj --o output
 dotnet run --project FileToVox.Gui
 ```
 
-The GUI provides the same conversion features with a graphical interface — select input/output files, configure options, and monitor conversion progress with a log view.
+Select input/output files, configure options, and monitor conversion progress with a log view.
 
-# MeshToVox
+## License
 
-MeshToVox is an external program from FileToVox that allows you to voxelize 3D object files.
-
-Features:
-
-- Load OBJ, FBX, GTLF, STL files
-- Support textures and materials
-- Export directly into .vox
-
-More information [here](https://github.com/Zarbuz/FileToVox/wiki/7.-MeshToVox)
-
-# Wiki
-
-Please read the documentation of FileToVox [here](https://github.com/Zarbuz/FileToVox/wiki/1.-Introduction)
-
-## Video Tutorials
-
-- https://www.youtube.com/watch?v=sg3z2GaMJzM
-- https://www.youtube.com/watch?v=fSo1iV1DE2U
-
-## Renders
-![](img/render.png)
-
-![](img/EKGGrQaX0AAxg56.jfif)
-
-![](img/EM3eWX2WoAABN5C.jfif)
-
-![](img/EM9l60HW4AAa2ik.jfif)
-
+MIT — see [LICENSE](LICENSE). Original project by [Zarbuz](https://github.com/Zarbuz).
